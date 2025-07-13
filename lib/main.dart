@@ -21,26 +21,63 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseTextTheme = Theme.of(context).textTheme;
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
-      brightness: Brightness.dark,
+    // Esquema para produtividade, status e equipes
+    final colorScheme = ColorScheme(
+      brightness: Brightness.light,
+      primary: const Color(0xFF1976D2), // Azul
+      onPrimary: Colors.white,
+      secondary: const Color(0xFF43A047), // Verde
+      onSecondary: Colors.white,
+      error: const Color(0xFFE53935), // Vermelho
+      onError: Colors.white, // Cinza escuro
+      surface: const Color(0xFFFFFFFF), // Branco
+      onSurface: const Color(0xFF222222), // Cinza escuro
     );
     return MaterialApp(
       title: 'KanbaTask',
       theme: ThemeData(
         colorScheme: colorScheme,
+        scaffoldBackgroundColor: colorScheme.surface,
+        cardColor: colorScheme.surface,
         textTheme: GoogleFonts.robotoTextTheme(baseTextTheme).apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
+          bodyColor: colorScheme.onSurface,
+          displayColor: colorScheme.onSurface,
         ),
         appBarTheme: AppBarTheme(
           titleTextStyle: GoogleFonts.roboto(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: colorScheme.onPrimary,
           ),
           backgroundColor: colorScheme.primary,
-          iconTheme: const IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: colorScheme.onPrimary),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
+            textStyle: const TextStyle(fontWeight: FontWeight.bold),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(32),
+            ),
+          ),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: colorScheme.secondary,
+          foregroundColor: colorScheme.onSecondary,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: colorScheme.surface,
+          labelStyle: TextStyle(color: colorScheme.onSurface),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: colorScheme.primary),
+          ),
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: const Color(0xFF8E24AA), // Roxo para info/aviso
+          contentTextStyle: const TextStyle(color: Colors.white),
         ),
       ),
       home: const HomePage(),
