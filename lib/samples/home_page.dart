@@ -8,12 +8,29 @@ import 'package:kanbatask/samples/remote_config_page.dart';
 import 'package:kanbatask/samples/storage_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final bool isDark;
+  final ValueChanged<bool>? onThemeChanged;
+
+  const HomePage({super.key, this.isDark = false, this.onThemeChanged});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('KanbaTask - Testes')),
+      appBar: AppBar(
+        title: const Text('KanbaTask - Testes'),
+        actions: [
+          Row(
+            children: [
+              const Icon(Icons.light_mode),
+              Switch(
+                value: isDark,
+                onChanged: onThemeChanged,
+              ),
+              const Icon(Icons.dark_mode),
+            ],
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [

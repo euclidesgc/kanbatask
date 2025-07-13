@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Tokens de tipografia do Design System Kanba
-class KanbaTypography {
+class KanbaText {
   // Headings
   static TextStyle get h1 => GoogleFonts.urbanist(
     fontSize: 48,
