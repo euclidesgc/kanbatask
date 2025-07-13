@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.catundastudio.kanbatask"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = project.findProperty("flutter.ndkVersion") as String? ?: "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
