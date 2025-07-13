@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786370361776",
+    "project_id": "kanbatask-d095b",
+    "storage_bucket": "kanbatask-d095b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786370361776:android:f6d3fa61293add1212fe75",
+        "android_client_info": {
+          "package_name": "com.catundastudio.kanbatask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKGkZhTPuNhrdLp2X71yx6yl8eGXdjgl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
