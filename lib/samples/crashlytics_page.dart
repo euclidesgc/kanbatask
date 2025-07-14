@@ -37,7 +37,7 @@ class _CrashlyticsPageState extends State<CrashlyticsPage> {
                 );
                 // Envia os relatórios pendentes imediatamente
                 await FirebaseCrashlytics.instance.sendUnsentReports();
-                if (!mounted) return;
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Erro não fatal registrado e enviado!'),
