@@ -1,5 +1,10 @@
 {
     "dart.flutterSdkPath": "C:\\Users\\Euclides\\.puro\\envs\\stable\\flutter",
     "dart.sdkPath": "C:\\Users\\Euclides\\.puro\\envs\\stable\\flutter\\bin\\cache\\dart-sdk",
-    "dart.projectSearchDepth": 5
+    "dart.projectSearchDepth": 5,
+    "workbench.colorCustomizations": {
+        "tab.activeBackground": "#0d1a26",
+        "tab.activeBorderTop": "#FF00FF",
+        "tab.activeBorder": "#FF00FF"
+    }
 }
