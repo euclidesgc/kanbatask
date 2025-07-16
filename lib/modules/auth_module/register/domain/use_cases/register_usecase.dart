@@ -1,4 +1,4 @@
-import '../entities/user_entity.dart';
+import '../../../shared/domain/entities/user_entity.dart';
 import '../repositories/register_repository.dart';
 
 class RegisterUseCase {

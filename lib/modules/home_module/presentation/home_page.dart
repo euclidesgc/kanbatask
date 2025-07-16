@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../auth_module/cubit/auth_cubit.dart';
+import 'package:kanbatask/modules/auth_module/shared/presentation/cubits/auth_cubit.dart';
 
 class HomePage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {

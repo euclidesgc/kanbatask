@@ -61,7 +61,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
             // Voltar para a página de login após 2 segundos
             Future.delayed(const Duration(seconds: 2), () {
-              if (mounted) {
+              if (context.mounted) {
                 context.go('/login');
               }
             });

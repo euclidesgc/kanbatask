@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kanbatask/modules/auth_module/shared/presentation/cubits/auth_cubit.dart';
 
 import 'modules/auth_module/auth_routes.dart';
-import 'modules/auth_module/cubit/auth_cubit.dart';
 import 'modules/home_module/home_routes.dart';
 import 'modules/splash_module/splash_routes.dart';
 
@@ -26,7 +28,7 @@ class AppRoutes {
         final currentLocation = state.matchedLocation;
         final authState = authCubit.state;
 
-        print('🚦 Redirect - Location: $currentLocation, Auth: $authState');
+        log('🚦 Redirect - Location: $currentLocation, Auth: $authState');
 
         // IMPORTANTE: Não redirecionar DA splash - ela controla sua própria navegação
         if (currentLocation == '/splash') {

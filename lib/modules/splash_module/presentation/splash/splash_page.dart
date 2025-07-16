@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../auth_module/cubit/auth_cubit.dart';
+import 'package:kanbatask/modules/auth_module/shared/presentation/cubits/auth_cubit.dart';
 
 class SplashPage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {
@@ -47,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
       _hasNavigated = true;
       final authState = context.read<AuthCubit>().state;
 
-      print(
+      log(
         '🚀 Splash navegando após ${_minimumDisplayTime.inSeconds}s com estado: $authState',
       );
 
@@ -64,7 +65,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          print('💫 Splash - Auth mudou para: $state');
+          log('💫 Splash - Auth mudou para: $state');
 
           // Marca que auth foi resolvido quando sai dos estados iniciais
           if (state is AuthAuthenticated || state is AuthUnauthenticated) {

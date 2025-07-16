@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../cubit/auth_cubit.dart';
+import '../../../shared/presentation/cubits/auth_cubit.dart';
 
 class LoginPage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {

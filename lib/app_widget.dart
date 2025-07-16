@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kanbatask/modules/auth_module/shared/presentation/cubits/auth_cubit.dart';
 
 import 'app_routes.dart';
-import 'modules/auth_module/cubit/auth_cubit.dart';
 
 class AppWidget extends StatefulWidget {
   const AppWidget({super.key});

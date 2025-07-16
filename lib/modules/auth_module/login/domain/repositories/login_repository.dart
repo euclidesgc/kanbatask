@@ -1,9 +1,8 @@
 import '../../../shared/domain/entities/user_entity.dart';
 
-abstract class RegisterRepository {
-  Future<UserEntity> register({
+abstract class LoginRepository {
+  Future<UserEntity> login({
     required String email,
     required String password,
-    String? displayName,
   });
 }

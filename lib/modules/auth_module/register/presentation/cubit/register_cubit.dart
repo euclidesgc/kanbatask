@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../login/domain/use_cases/register_usecase.dart';
+import '../../domain/use_cases/register_usecase.dart';
 
 part 'register_state.dart';
 

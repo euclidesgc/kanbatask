@@ -4,23 +4,23 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../login/domain/repositories/auth_repository.dart';
-import '../login/domain/use_cases/login_usecase.dart';
-import '../login/domain/use_cases/logout_usecase.dart';
+import '../../../login/domain/use_cases/login_usecase.dart';
+import '../../../session/domain/repositories/session_repository.dart';
+import '../../../session/domain/use_cases/logout_usecase.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final AuthRepository _authRepository;
+  final SessionRepository _sessionRepository;
   final LoginUseCase _loginUseCase;
   final LogoutUseCase _logoutUseCase;
   StreamSubscription<User?>? _authSubscription;
 
   AuthCubit({
-    required AuthRepository authRepository,
+    required SessionRepository sessionRepository,
     required LoginUseCase loginUseCase,
     required LogoutUseCase logoutUseCase,
-  }) : _authRepository = authRepository,
+  }) : _sessionRepository = sessionRepository,
        _loginUseCase = loginUseCase,
        _logoutUseCase = logoutUseCase,
        super(AuthInitial()) {
@@ -30,7 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
   void _initAuthState() {
     emit(AuthInProgress());
 
-    _authSubscription = _authRepository.authStateChanges.listen((user) {
+    _authSubscription = _sessionRepository.authStateChanges.listen((user) {
       if (user != null) {
         emit(AuthAuthenticated(user));
       } else {
