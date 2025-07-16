@@ -7,53 +7,49 @@ import 'modules/home_module/home_routes.dart';
 import 'modules/splash_module/splash_routes.dart';
 
 class AuthNotifier extends ChangeNotifier {
-  final AuthCubit _authCubit;
-
-  AuthNotifier(this._authCubit) {
-    _authCubit.stream.listen((_) {
+  AuthNotifier(AuthCubit authCubit) {
+    authCubit.stream.listen((_) {
       notifyListeners();
     });
   }
 }
 
-mixin AppRoutes {
+class AppRoutes {
   static final navigatorKey = GlobalKey<NavigatorState>();
 
-  GoRouter createAppRoutes(AuthCubit authCubit) {
-    final authNotifier = AuthNotifier(authCubit);
-
+  static GoRouter createAppRoutes(AuthCubit authCubit) {
     return GoRouter(
       navigatorKey: navigatorKey,
       initialLocation: '/splash',
-      refreshListenable: authNotifier,
-      redirect: (context, state) {
+      refreshListenable: AuthNotifier(authCubit),
+      redirect: (BuildContext context, GoRouterState state) {
+        final currentLocation = state.matchedLocation;
         final authState = authCubit.state;
 
-        final isAuthRoute =
-            state.uri.toString().startsWith('/login') ||
-            state.uri.toString().startsWith('/register') ||
-            state.uri.toString().startsWith('/forgot-password');
+        print('🚦 Redirect - Location: $currentLocation, Auth: $authState');
 
-        final isPublicRoute = [
-          '/splash',
-          '/login',
-          '/register',
-          '/forgot-password',
-        ].contains(state.uri.toString());
-
-        if (authState is AuthInitial || authState is AuthInProgress) {
-          return null;
+        // IMPORTANTE: Não redirecionar DA splash - ela controla sua própria navegação
+        if (currentLocation == '/splash') {
+          return null; // Deixa splash decidir quando sair
         }
 
-        if (authState is AuthUnauthenticated && !isPublicRoute) {
-          return '/login';
+        // Se está autenticado e tentando acessar páginas de auth, redireciona para home
+        if (authState is AuthAuthenticated) {
+          if (currentLocation == '/login' ||
+              currentLocation == '/register' ||
+              currentLocation == '/forgot-password') {
+            return '/home';
+          }
         }
 
-        if (authState is AuthAuthenticated && isAuthRoute) {
-          return '/home';
+        // Se não está autenticado e tentando acessar home, redireciona para login
+        if (authState is AuthUnauthenticated) {
+          if (currentLocation == '/home') {
+            return '/login';
+          }
         }
 
-        return null;
+        return null; // Não redirecionar
       },
       routes: [
         SplashRoutes.route,

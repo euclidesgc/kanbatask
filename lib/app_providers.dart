@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'app_routes.dart';
 import 'modules/auth_module/cubit/auth_cubit.dart';
 import 'modules/auth_module/forgot_password/data/datasources/forgot_password_data_source.dart';
 import 'modules/auth_module/forgot_password/data/repositories/forgot_password_repository_impl.dart';
@@ -17,10 +16,10 @@ import 'modules/auth_module/login/domain/use_cases/logout_usecase.dart';
 import 'modules/auth_module/login/domain/use_cases/register_usecase.dart';
 import 'modules/auth_module/register/presentation/cubit/register_cubit.dart';
 
-class AppProviders extends StatelessWidget with AppRoutes {
+class AppProviders extends StatelessWidget {
   final Widget child;
 
-  AppProviders({super.key, required this.child});
+  const AppProviders({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
