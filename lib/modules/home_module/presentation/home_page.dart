@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../auth_module/cubit/auth_cubit.dart';
 
 class HomePage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {
@@ -18,6 +21,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sair',
+            onPressed: () {
+              _showLogoutDialog(context);
+            },
+          ),
+        ],
       ),
       body: Container(
         alignment: Alignment.center,
@@ -26,6 +38,33 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 24),
         ),
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Logout'),
+          content: const Text('Tem certeza que deseja sair?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+                context.read<AuthCubit>().signOut(); // Executa logout
+              },
+              child: const Text('Sair'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

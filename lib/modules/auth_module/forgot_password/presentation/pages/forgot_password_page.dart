@@ -2,37 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../cubit/auth_cubit.dart';
+import 'cubit/forgot_password_cubit.dart';
 
-class LoginPage extends StatefulWidget {
+class ForgotPasswordPage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {
-    return const LoginPage();
+    return const ForgotPasswordPage();
   }
 
-  const LoginPage({super.key});
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleForgotPassword() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().login(
+      context.read<ForgotPasswordCubit>().forgotPassword(
         email: _emailController.text,
-        password: _passwordController.text,
       );
     }
   }
@@ -41,20 +37,35 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Recuperar Senha'),
         centerTitle: true,
       ),
-      body: BlocListener<AuthCubit, AuthState>(
+      body: BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is ForgotPasswordFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is ForgotPasswordSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Email de recuperação enviado! Verifique sua caixa de entrada.',
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            // Voltar para a página de login após 2 segundos
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                context.go('/login');
+              }
+            });
           }
-          // Remoção da navegação manual - o GoRouter fará isso automaticamente
         },
         child: SingleChildScrollView(
           child: Padding(
@@ -65,9 +76,27 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.account_circle,
+                    Icons.lock_reset,
                     size: 100,
                     color: Colors.grey,
+                  ),
+                  const SizedBox(height: 32),
+                  const Text(
+                    'Esqueceu sua senha?',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Digite seu email e enviaremos um link para redefinir sua senha.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
                   TextFormField(
@@ -90,47 +119,16 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_isPasswordVisible,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                      border: const OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira sua senha';
-                      }
-                      if (value.length < 6) {
-                        return 'A senha deve ter pelo menos 6 caracteres';
-                      }
-                      return null;
-                    },
-                  ),
                   const SizedBox(height: 24),
-                  BlocBuilder<AuthCubit, AuthState>(
+                  BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                     builder: (context, state) {
                       return SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: state is AuthInProgress
+                          onPressed: state is ForgotPasswordInProgress
                               ? null
-                              : _handleLogin,
+                              : _handleForgotPassword,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).primaryColor,
                             foregroundColor: Colors.white,
@@ -138,14 +136,14 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: state is AuthInProgress
+                          child: state is ForgotPasswordInProgress
                               ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     Colors.white,
                                   ),
                                 )
                               : const Text(
-                                  'Entrar',
+                                  'Enviar Link de Recuperação',
                                   style: TextStyle(fontSize: 16),
                                 ),
                         ),
@@ -155,16 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () {
-                      context.go('/forgot-password');
+                      context.go('/login');
                     },
-                    child: const Text('Esqueci minha senha'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      context.go('/register');
-                    },
-                    child: const Text('Não tem uma conta? Cadastre-se'),
+                    child: const Text('Voltar para o Login'),
                   ),
                 ],
               ),

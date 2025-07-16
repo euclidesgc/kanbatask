@@ -2,37 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../cubit/auth_cubit.dart';
+import '../cubit/register_cubit.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   static Widget providerPageBuilder(BuildContext context, GoRouterState state) {
-    return const LoginPage();
+    return const RegisterPage();
   }
 
-  const LoginPage({super.key});
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleRegister() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().login(
+      context.read<RegisterCubit>().register(
         email: _emailController.text,
         password: _passwordController.text,
+        displayName: _nameController.text.isNotEmpty
+            ? _nameController.text
+            : null,
       );
     }
   }
@@ -41,20 +49,28 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Criar Conta'),
         centerTitle: true,
       ),
-      body: BlocListener<AuthCubit, AuthState>(
+      body: BlocListener<RegisterCubit, RegisterState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is RegisterFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is RegisterSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Conta criada com sucesso! Redirecionando...',
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
-          // Remoção da navegação manual - o GoRouter fará isso automaticamente
         },
         child: SingleChildScrollView(
           child: Padding(
@@ -65,11 +81,21 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.account_circle,
+                    Icons.person_add,
                     size: 100,
                     color: Colors.grey,
                   ),
                   const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _nameController,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Nome (opcional)',
+                      prefixIcon: Icon(Icons.person),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -121,16 +147,48 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: !_isConfirmPasswordVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Confirmar Senha',
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isConfirmPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
+                          });
+                        },
+                      ),
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, confirme sua senha';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'As senhas não coincidem';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 24),
-                  BlocBuilder<AuthCubit, AuthState>(
+                  BlocBuilder<RegisterCubit, RegisterState>(
                     builder: (context, state) {
                       return SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: state is AuthInProgress
+                          onPressed: state is RegisterInProgress
                               ? null
-                              : _handleLogin,
+                              : _handleRegister,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).primaryColor,
                             foregroundColor: Colors.white,
@@ -138,14 +196,14 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: state is AuthInProgress
+                          child: state is RegisterInProgress
                               ? const CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     Colors.white,
                                   ),
                                 )
                               : const Text(
-                                  'Entrar',
+                                  'Criar Conta',
                                   style: TextStyle(fontSize: 16),
                                 ),
                         ),
@@ -155,16 +213,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () {
-                      context.go('/forgot-password');
+                      // Navegar para página de login
+                      context.go('/login');
                     },
-                    child: const Text('Esqueci minha senha'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      context.go('/register');
-                    },
-                    child: const Text('Não tem uma conta? Cadastre-se'),
+                    child: const Text('Já tem uma conta? Faça login'),
                   ),
                 ],
               ),
