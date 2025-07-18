@@ -166,7 +166,7 @@ await FirebaseFirestore.instance.settings = const Settings(
 ## 📄 Diagrama Mermaid
 
 ```mermaid
-erDiagram
+erDiagram 
 
   USERS {
     string id PK
