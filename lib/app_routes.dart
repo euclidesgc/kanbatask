@@ -35,7 +35,6 @@ class AppRoutes {
           return null; // Deixa splash decidir quando sair
         }
 
-        // Se está autenticado e tentando acessar páginas de auth, redireciona para home
         if (authState is AuthAuthenticated) {
           if (currentLocation == '/login' ||
               currentLocation == '/register' ||

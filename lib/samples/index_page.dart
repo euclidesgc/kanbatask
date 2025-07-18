@@ -7,11 +7,11 @@ import 'package:kanbatask/samples/projects_page.dart';
 import 'package:kanbatask/samples/remote_config_page.dart';
 import 'package:kanbatask/samples/storage_page.dart';
 
-class HomePage extends StatelessWidget {
+class IndexPage extends StatelessWidget {
   final bool isDark;
   final ValueChanged<bool>? onThemeChanged;
 
-  const HomePage({super.key, this.isDark = false, this.onThemeChanged});
+  const IndexPage({super.key, this.isDark = false, this.onThemeChanged});
 
   @override
   Widget build(BuildContext context) {
